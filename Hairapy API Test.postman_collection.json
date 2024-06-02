@@ -1,0 +1,130 @@
+{
+	"info": {
+		"_postman_id": "b62e2320-eb4d-45ec-b4d2-f5773f53efc8",
+		"name": "Hairapy API Test",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "34723183"
+	},
+	"item": [
+		{
+			"name": "Get Root",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Root Route Loaded', ()=>{\r",
+							"    pm.expect(pm.response.code).to.equals(200);\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}",
+					"host": [
+						"{{baseURL}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Lost",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Lost Route Loaded', ()=>{\r",
+							"    pm.expect(pm.response.code).to.equals(404);\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/lost",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"lost"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Post Predict",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const responseJSON = pm.response.json();\r",
+							"\r",
+							"pm.test('Route Loaded', ()=>{\r",
+							"    pm.expect(pm.response.code).to.equals(200);\r",
+							"})\r",
+							"\r",
+							"pm.test('Route returns an Object', ()=>{\r",
+							"    pm.expect(responseJSON).to.be.an('object');\r",
+							"})\r",
+							"\r",
+							"pm.test('Route returns with Prediction Result', ()=>{\r",
+							"    pm.expect(responseJSON).to.ownProperty('prediction');\r",
+							"    pm.expect(responseJSON.prediction).to.be.an('string');\r",
+							"})\r",
+							"\r",
+							"pm.test('Route Returns with Recomendation Object', ()=>{\r",
+							"    pm.expect(responseJSON).to.ownProperty('recomendations');\r",
+							"\r",
+							"    if(responseJSON.recomendations){\r",
+							"        const recomendations = responseJSON.recomendations;\r",
+							"        pm.expect(recomendations).to.be.an('array');\r",
+							"    }\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "image",
+							"type": "file",
+							"src": []
+						}
+					]
+				},
+				"url": {
+					"raw": "{{baseURL}}/predict",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"predict"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
