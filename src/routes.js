@@ -1,5 +1,5 @@
 const {
-    getRootHandler
+    getRootHandler, customNotFound
 } = require('./handler');
 
 const routes = [
@@ -8,6 +8,11 @@ const routes = [
         path: '/',
         handler: getRootHandler,
     },
+    {
+        method: '*',
+        path: '/{any*}',
+        handler: customNotFound,
+    }
 
 ];
 
