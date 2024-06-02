@@ -1,10 +1,12 @@
+const {
+    getRootHandler
+} = require('./handler');
+
 const routes = [
     {
         method: 'GET',
         path: '/',
-        handler: (request, h) => {
-            return 'Homepage';
-        },
+        handler: getRootHandler,
     },
 
 ];
