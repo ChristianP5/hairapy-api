@@ -8,7 +8,9 @@ Add API Documentation Here!
 
 ## API Documentation:
 **/predict**  
-(Unfinished) Send an Image as an Input to the Multi-Class Machine Learning Model. Records output in Firestore and returns it to the Client in JSON format 
+- 🔴 Send an Image as an Input to the Multi-Class Machine Learning Model
+- ✔️ Records output in Firestore
+- ✔️ Returns Inference result as JSON 
 
 Input:
 - Image
