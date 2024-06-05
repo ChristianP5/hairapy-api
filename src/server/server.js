@@ -1,5 +1,6 @@
 const Hapi = require('@hapi/hapi');
 const routes = require('./routes');
+const { loadModel } = require('../services/inferenceOps');
 
 const init = async () => {
   const server = Hapi.server({
@@ -13,6 +14,14 @@ const init = async () => {
   });
 
   server.route(routes);
+
+  /* Load the Model and Save the Model in server.app (Uncomment once Model is Available) */
+  /*
+    server.app is a place to store values accessible wherever the server can access
+    access values in server.app through handlers:
+      request.server.app
+  */
+  // server.app.model = await loadModel();
 
   server.ext('onPreResponse', (request, h)=>{
     const response = request.response;
