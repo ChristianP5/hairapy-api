@@ -20,7 +20,7 @@ Input:
 **/predict**
 '
 - Method: 'POST'
-- Body: { image: <image-file> }  
+- Body: { image: \<image-file\> }  
 
 Output:  
 &nbsp;{  
