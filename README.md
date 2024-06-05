@@ -23,25 +23,25 @@ Input:
 - Body: { image: <image-file> }  
 
 Output:  
-{  
-    "status": "success",  
-    "message": "Prediction Success!",  
-    "data": {  
-        "result": "classification-value",  
-        "ingredients": [  
-            "ingredient-1",  
-            "ingredient-2",  
-            "ingredient-3"  
-        ],  
-        "recomendations": [  
-            {  
-                "image": "rec1-image-url",  
-                "name": "rec1-name"  
-            },  
-            {  
-                "image": "rec2-image-url",
-                "name": "rec2-name"
-            }
-        ]
-    }
-}
+&nbsp;{  
+&nbsp;&nbsp;&nbsp;"status": "success",  
+&nbsp;&nbsp;&nbsp;"message": "Prediction Success!",  
+&nbsp;&nbsp;&nbsp;"data": {  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"result": "classification-value",  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"ingredients": [  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"ingredient-1",  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"ingredient-2",  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"ingredient-3"  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;],  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"recomendations": [  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"image": "rec1-image-url",  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"name": "rec1-name"  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;},  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"image": "rec2-image-url",  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"name": "rec2-name"  
+&nbsp;&nbsp;&nbsp;&nbsp;}  
+&nbsp;&nbsp;&nbsp;]  
+&nbsp;&nbsp;}  
+&nbsp;}  
