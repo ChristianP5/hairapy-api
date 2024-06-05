@@ -1,4 +1,4 @@
-﻿# hairapy-api
+﻿# ✨hairapy-api✨
 Add API Documentation Here!
 
 ## Development Environment:
