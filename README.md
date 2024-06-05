@@ -3,6 +3,8 @@ Add API Documentation Here!
 
 ## Development Environment:
 - Do not use Windows, since TensorflowJS Package is used
+- OR remove '@tensorflow/tfjs-node' from package.json
+**before running 'npm install'**  
 
 ## API Documentation:
 **/predict**  
