@@ -73,6 +73,7 @@
 					"script": {
 						"exec": [
 							"const responseJSON = pm.response.json();\r",
+							"const data = responseJSON.data;\r",
 							"\r",
 							"pm.test('Route Loaded', ()=>{\r",
 							"    pm.expect(pm.response.code).to.equals(200);\r",
@@ -83,15 +84,16 @@
 							"})\r",
 							"\r",
 							"pm.test('Route returns with Prediction Result', ()=>{\r",
-							"    pm.expect(responseJSON).to.ownProperty('prediction');\r",
-							"    pm.expect(responseJSON.prediction).to.be.an('string');\r",
+							"    \r",
+							"    pm.expect(data).to.ownProperty('result');\r",
+							"    pm.expect(data.result).to.be.an('string');\r",
 							"})\r",
 							"\r",
 							"pm.test('Route Returns with Recomendation Object', ()=>{\r",
-							"    pm.expect(responseJSON).to.ownProperty('recomendations');\r",
+							"    pm.expect(data).to.ownProperty('recomendations');\r",
 							"\r",
 							"    if(responseJSON.recomendations){\r",
-							"        const recomendations = responseJSON.recomendations;\r",
+							"        const recomendations = data.recomendations;\r",
 							"        pm.expect(recomendations).to.be.an('array');\r",
 							"    }\r",
 							"})"
@@ -110,15 +112,17 @@
 						{
 							"key": "image",
 							"type": "file",
-							"src": []
+							"src": "/C:/Users/chris/Downloads/scissors.png"
 						}
 					]
 				},
 				"url": {
-					"raw": "{{baseURL}}/predict",
+					"raw": "http://localhost:3000/predict",
+					"protocol": "http",
 					"host": [
-						"{{baseURL}}"
+						"localhost"
 					],
+					"port": "3000",
 					"path": [
 						"predict"
 					]
