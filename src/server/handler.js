@@ -1,4 +1,7 @@
 const { modelPredict } = require('../services/inferenceOps');
+const savePrediction = require('../services/savePrediction');
+const InputError = require('../exceptions/InputError');
+const crypto = require('crypto');
 
 const getRootHandler = (request, h)=>{
     return h.response({
@@ -45,6 +48,20 @@ const postPredictHandler = async (request, h)=>{
     // const { model } = request.server.app;
 
     // const { result, ingredients, recomendations } = await modelPredict(image) 
+
+    /* Save Image to Google Cloud Storage Bucket */
+
+    /* Save Prediction to Firestore */
+    const predictId = crypto.randomBytes(8).toString('hex');
+    const predictData = {
+        result: result,
+        ingredients: ingredients,
+        recomendations: recomendations,
+        image: 'image-url'
+    }
+
+    await savePrediction(predictId, predictData);
+
 
     const response = h.response({
         status: 'success',
