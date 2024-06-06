@@ -2,6 +2,7 @@ const { modelPredict } = require('../services/inferenceOps');
 const savePrediction = require('../services/savePrediction');
 const InputError = require('../exceptions/InputError');
 const crypto = require('crypto');
+const { uploadImage, createBucket } = require('../services/upload');
 
 const getRootHandler = (request, h)=>{
     return h.response({
@@ -18,6 +19,20 @@ const customNotFound = (request, h)=>{
 
     response.code(404);
     return response;
+}
+
+const postUploadHandler = async (request, h) => {
+
+    const { image } = request.payload;
+    const { filename: imageName, path: imagePath } = image;
+
+    const destinationPath = `${process.env.BUCKET_UPLOAD_PATH}${imageName}`
+
+    await createBucket();
+    await uploadImage(imagePath, destinationPath);
+
+
+    return 1;
 }
 
 const postPredictHandler = async (request, h)=>{
@@ -50,6 +65,7 @@ const postPredictHandler = async (request, h)=>{
     // const { result, ingredients, recomendations } = await modelPredict(image) 
 
     /* Save Image to Google Cloud Storage Bucket */
+    
 
     /* Save Prediction to Firestore */
     const predictId = crypto.randomBytes(8).toString('hex');
@@ -79,5 +95,4 @@ const postPredictHandler = async (request, h)=>{
 }
 
 module.exports = {
-    getRootHandler, customNotFound, postPredictHandler
-};
+    getRootHandler, customNotFound, postPredictHandler, postUploadHandler};

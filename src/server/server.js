@@ -26,6 +26,12 @@ const init = async () => {
   */
   // server.app.model = await loadModel();
 
+
+  await server.register([
+    {
+      plugin: require('@hapi/inert')
+    }
+  ])
   server.ext('onPreResponse', (request, h)=>{
     const response = request.response;
 
