@@ -1,5 +1,5 @@
 ﻿# ✨hairapy-api✨
-Add API Documentation Here!
+Add the API Documentation Here!
 
 ## Development Environment:
 - Do not use Windows, since TensorflowJS Package is used
