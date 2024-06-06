@@ -1,6 +1,6 @@
 ﻿# ✨hairapy-api✨
 
-Please Add the API Documentation Here!!
+Please Add the API Documentation Here!
 
 ## Notes for Development Environment:
 
