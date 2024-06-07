@@ -1,12 +1,13 @@
-const { server } = require('@hapi/hapi');
 const tfjs = require('@tensorflow/tfjs-node');
 
-const loadModel = ()=>{
+const loadModel = async ()=>{
     let model;
 
     /* API to Load the Model */
-    // model = tfjs.loadGraphModel(process.env.MODEL_URL);
+    console.log('Building Model...');
+    model = await tfjs.loadLayersModel(process.env.MODEL_URL);
 
+    console.log('Building Model Succes!!');
     return model;
 };
 
@@ -19,7 +20,15 @@ const modelPredict = async(model, image)=>{
     const prediction = model.predict(tensor);
     const score = await prediction.data();
 
-    const classification = 'classification-value';
+    const confidenceScore = Math.max(...score)*100;
+    // console.log(confidenceScore);
+
+    const result = tfjs.argMax(prediction, 1).dataSync()[0];
+
+    const classifications = ['Dandruff', 'Hair Greasy', 'Hair Loss', 'Psoriasis'];
+    const predicted_class = classifications[result];
+
+    const classification = predicted_class;
     const ingredients = [
         "ingredient-1",
         "ingredient-2",
@@ -36,7 +45,7 @@ const modelPredict = async(model, image)=>{
         },
     ]
 
-    return { result: classification, ingredients: ingredients, recommendations: recommendations}
+    return { result: classification, confidenceScore: confidenceScore, ingredients: ingredients, recommendations: recommendations}
 }
 
 module.exports = { loadModel, modelPredict };

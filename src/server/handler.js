@@ -1,7 +1,9 @@
+const crypto = require('crypto');
+const fs = require('fs');
+
 const { modelPredict } = require('../services/inferenceOps');
 const savePrediction = require('../services/savePrediction');
 const InputError = require('../exceptions/InputError');
-const crypto = require('crypto');
 const { uploadImage, createBucket } = require('../services/upload');
 
 const getRootHandler = (request, h)=>{
@@ -23,10 +25,18 @@ const customNotFound = (request, h)=>{
 
 const postPredictHandler = async (request, h)=>{
 
-    let result, ingredients, recomendations
+
+    const { image } = request.payload;
+    const { filename: imageName, path: imagePath } = image;
+    const imageRaw = fs.readFileSync(imagePath);
+
+    /* Use the Loaded Model */
+    const { model } = request.server.app;
+    let { result, confidenceScore, ingredients, recomendations } = await modelPredict(model, imageRaw);
 
     // Default Values
-    result = 'classification-value';
+    // result = 'classification-value';
+    // confidenceScore = 100;
     ingredients = [
         "ingredient-1",
         "ingredient-2",
@@ -43,14 +53,7 @@ const postPredictHandler = async (request, h)=>{
         },
     ]
 
-    /* Use the Loaded Model */
-    // const { model } = request.server.app;
-
-    // const { result, ingredients, recomendations } = await modelPredict(image) 
-
     /* Save Image to Google Cloud Storage Bucket */
-    const { image } = request.payload;
-    const { filename: imageName, path: imagePath } = image;
 
     const imageExt = imageName.split('.')[1];
     const newImageName = `input-image-${crypto.randomBytes(4).toString('hex')}.${imageExt}`
@@ -64,6 +67,7 @@ const postPredictHandler = async (request, h)=>{
     const predictId = crypto.randomBytes(8).toString('hex');
     const predictData = {
         result: result,
+        confidenceScore: confidenceScore,
         ingredients: ingredients,
         recomendations: recomendations,
         image: `${process.env.SAVED_PREDICTION_IMG_URL}${newImageName}`,
@@ -77,6 +81,7 @@ const postPredictHandler = async (request, h)=>{
         message: 'Prediction Success!',
         data: {
             result: result,
+            confidenceScore: confidenceScore,
             ingredients: ingredients,
             recomendations: recomendations,
 

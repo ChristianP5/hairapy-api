@@ -24,7 +24,8 @@ const init = async () => {
     access values in server.app through handlers:
       request.server.app
   */
-  // server.app.model = await loadModel();
+      const model = await loadModel();
+      server.app.model = model;
 
 
   await server.register([
@@ -56,8 +57,9 @@ const init = async () => {
   console.log(`Server berjalan pada ${server.info.uri}`);
 };
 
-process.on('unhandledRejection', ()=>{
+process.on('unhandledRejection', (error)=>{
   console.error(`Process caught Error!`);
+  console.error(error.stack);
   process.exit(1);
 })
 
