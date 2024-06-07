@@ -129,6 +129,23 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "Post Image",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/upload",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"upload"
+					]
+				}
+			},
+			"response": []
 		}
 	]
 }
