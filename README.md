@@ -37,7 +37,3 @@ Input:
 
 Output:  
 ![WhatsApp Image 2024-06-07 at 12 47 27_a66c6bcd](https://github.com/ChristianP5/hairapy-api/assets/119984279/d4dfd717-e764-4982-891b-6af490c9eed9)
-
-&nbsp;&nbsp;&nbsp;]  
-&nbsp;&nbsp;}  
-&nbsp;}
