@@ -21,23 +21,7 @@ const customNotFound = (request, h)=>{
     return response;
 }
 
-const postUploadHandler = async (request, h) => {
-
-    const { image } = request.payload;
-    const { filename: imageName, path: imagePath } = image;
-
-    const destinationPath = `${process.env.BUCKET_UPLOAD_PATH}${imageName}`
-
-    await createBucket();
-    await uploadImage(imagePath, destinationPath);
-
-
-    return 1;
-}
-
 const postPredictHandler = async (request, h)=>{
-
-    const { image } = request.payload;
 
     let result, ingredients, recomendations
 
@@ -65,7 +49,16 @@ const postPredictHandler = async (request, h)=>{
     // const { result, ingredients, recomendations } = await modelPredict(image) 
 
     /* Save Image to Google Cloud Storage Bucket */
-    
+    const { image } = request.payload;
+    const { filename: imageName, path: imagePath } = image;
+
+    const imageExt = imageName.split('.')[1];
+    const newImageName = `input-image-${crypto.randomBytes(4).toString('hex')}.${imageExt}`
+
+    const destinationPath = `${process.env.BUCKET_UPLOAD_PATH}${newImageName}`
+
+    await createBucket();
+    await uploadImage(imagePath, destinationPath);
 
     /* Save Prediction to Firestore */
     const predictId = crypto.randomBytes(8).toString('hex');
@@ -73,7 +66,7 @@ const postPredictHandler = async (request, h)=>{
         result: result,
         ingredients: ingredients,
         recomendations: recomendations,
-        image: 'image-url'
+        image: `${process.env.SAVED_PREDICTION_IMG_URL}${newImageName}`,
     }
 
     await savePrediction(predictId, predictData);
@@ -95,4 +88,5 @@ const postPredictHandler = async (request, h)=>{
 }
 
 module.exports = {
-    getRootHandler, customNotFound, postPredictHandler, postUploadHandler};
+    getRootHandler, customNotFound, postPredictHandler, 
+};
