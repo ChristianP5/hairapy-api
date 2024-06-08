@@ -36,6 +36,9 @@ const postPredictHandler = async (request, h)=>{
     const { model } = request.server.app;
     let { result, confidenceScore, ingredients, recomendations } = await modelPredict(model, imageRaw);
 
+    const createdAt = new Date().toISOString();
+    console.log(createdAt);
+
     // Default Values
     // result = 'classification-value';
     // confidenceScore = 100;
@@ -73,6 +76,7 @@ const postPredictHandler = async (request, h)=>{
         ingredients: ingredients,
         recomendations: recomendations,
         image: `${process.env.SAVED_PREDICTION_IMG_URL}${newImageName}`,
+        createdAt: createdAt,
     }
 
     await savePrediction(predictId, predictData);
@@ -86,7 +90,7 @@ const postPredictHandler = async (request, h)=>{
             confidenceScore: confidenceScore,
             ingredients: ingredients,
             recomendations: recomendations,
-
+            createdAt: createdAt,
         }
     })
 
