@@ -14,8 +14,8 @@ const loadModel = async ()=>{
 const modelPredict = async(model, image)=>{
     const tensor = tfjs.node
     .decodeImage(image)
-    .resizeNearestNeighbor([224,224])
-    .expandDims().toFloat()
+    .resizeNearestNeighbor([224,224]).toFloat().div(tfjs.scalar(255.0))
+    .expandDims()
 
     const prediction = model.predict(tensor);
     const score = await prediction.data();

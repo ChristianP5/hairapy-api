@@ -1,5 +1,6 @@
 const crypto = require('crypto');
 const fs = require('fs');
+const path = require('path');
 
 const { modelPredict } = require('../services/inferenceOps');
 const savePrediction = require('../services/savePrediction');
@@ -28,6 +29,7 @@ const postPredictHandler = async (request, h)=>{
 
     const { image } = request.payload;
     const { filename: imageName, path: imagePath } = image;
+
     const imageRaw = fs.readFileSync(imagePath);
 
     /* Use the Loaded Model */
