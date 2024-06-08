@@ -19,6 +19,7 @@ const modelPredict = async(model, image)=>{
 
     const prediction = model.predict(tensor);
     const score = await prediction.data();
+    console.log(score);
 
     const confidenceScore = Math.max(...score)*100;
     // console.log(confidenceScore);

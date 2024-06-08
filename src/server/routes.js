@@ -17,6 +17,7 @@ const routes = [
                 allow: 'multipart/form-data',
                 multipart: true,
                 output: 'file',
+                maxBytes: 100000000
             }
         }
     },
