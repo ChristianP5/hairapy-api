@@ -15,7 +15,7 @@ Please Add the API Documentation Here!
 - ✔️ Send an Image as an Input to the Multi-Class Machine Learning Model
 - 🔴 Authentication
 - 🔴 Error Handling
-- 🔴 set maxBytes to 100MB (next deployment)
+- ✔️ set maxBytes to 100MB
 - ✔️ Records Prediction Results in Firestore
 - ✔️ Returns Inference result as JSON
 
