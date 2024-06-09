@@ -7,6 +7,12 @@ const savePrediction = require('../services/savePrediction');
 const InputError = require('../exceptions/InputError');
 const { uploadImage, createBucket } = require('../services/upload');
 
+const addArticle = require('../services/articles/addArticle');
+const getArticles = require('../services/articles/getArticles');
+const getArticleById = require('../services/articles/getArticleById');
+const deleteArticle = require('../services/articles/deleteArticle.js');
+const editArticle = require('../services/articles/editArticle');
+
 const getRootHandler = (request, h)=>{
     return h.response({
         status: 'success',
@@ -98,6 +104,126 @@ const postPredictHandler = async (request, h)=>{
     return response;
 }
 
+// Articles --------------------------------------------
+
+const postArticleHandler = async (request, h) => {
+    
+    let image, title, content;
+    try {
+        const { title: reqTitle, content: reqContent, image: reqImage } = request.payload || {};
+        if (!reqTitle || !reqContent || !reqImage) {
+            throw new Error('Missing required fields in payload');
+        }
+        title = reqTitle;
+        content = reqContent;
+        image = reqImage;
+    } catch (error) {
+        console.error(error.stack);
+        throw new InputError('Invalid input data');
+    }
+
+    const id = crypto.randomBytes(6).toString('hex');
+
+    
+    await addArticle(id, image, title, content);
+
+    const response = h.response({
+        status: 'success',
+        message: 'Article Added Successfully!',
+        data: {
+            articleID:id
+        }
+    })
+
+    response.code(201);
+    return response;
+}
+
+const getArticlesHandler = async (request, h) => {
+
+    const articles = await getArticles();
+
+    const response = h.response({
+        status: 'success',
+        message: 'Articles Retrieved!',
+        data: {
+            articles: articles,
+        }
+    })
+
+    response.code(200);
+
+    return response;
+}
+
+const getArticleByIdHandler = async (request, h) => {
+    
+    const { id } = request.params;
+    
+    const article = await getArticleById(id);
+    
+    const response = h.response({
+        status: 'success',
+        message: `Article with id=${id} Retrieved!`,
+        data: {
+            article: article,
+        }
+    })
+
+    response.code(200);
+
+    return response;
+
+}
+
+const deleteArticleHandler = async (request, h) => {
+
+    const { id } = request.params;
+
+    await deleteArticle(id);
+
+    const response = h.response({
+        status: 'success',
+        message: `Article with id=${id} Deleted!`,
+    })
+
+    response.code(200);
+
+    return response;
+}
+
+const editArticleHandler = async (request, h) => {
+
+    const { id } = request.params;
+    
+    let image, title, content;
+    try {
+        const { title: reqTitle, content: reqContent, image: reqImage } = request.payload || {};
+        if (!reqTitle || !reqContent || !reqImage) {
+            throw new Error('Missing required fields in payload');
+        }
+        title = reqTitle;
+        content = reqContent;
+        image = reqImage;
+    } catch (error) {
+        console.error(error.stack);
+        throw new InputError('Invalid input data');
+    }
+
+    await editArticle(id, title, content, image);
+
+    const response = h.response({
+        status: 'success',
+        message: `Article with id=${id} Updated!!`,
+    })
+
+    response.code(201);
+
+    return response;
+}
+
 module.exports = {
-    getRootHandler, customNotFound, postPredictHandler, 
+    getRootHandler, customNotFound, postPredictHandler,
+    postArticleHandler, getArticlesHandler, getArticleByIdHandler,
+    deleteArticleHandler, editArticleHandler
 };

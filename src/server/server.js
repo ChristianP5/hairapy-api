@@ -2,6 +2,7 @@ const Hapi = require('@hapi/hapi');
 const routes = require('./routes');
 const { loadModel } = require('../services/inferenceOps');
 const dotenv = require('dotenv');
+const InputError = require('../exceptions/InputError');
 
 dotenv.config();
 
@@ -24,9 +25,10 @@ const init = async () => {
     access values in server.app through handlers:
       request.server.app
   */
+ 
       const model = await loadModel();
       server.app.model = model;
-
+  
 
   await server.register([
     {
@@ -40,12 +42,18 @@ const init = async () => {
       console.error(`Response is an Error!`);
       const newResponse = h.response({
         status: 'fail',
-        message: `${response.stack}`
+        message: `${response.message}`,
+        error: `${response.stack}`,
       });
 
       console.error(response.stack);
 
       newResponse.code(500)
+
+      if(response instanceof InputError){
+        newResponse.code(response.errorCode);
+      }
+      
 
       return newResponse;
     }
