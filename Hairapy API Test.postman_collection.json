@@ -73,7 +73,7 @@
 					"script": {
 						"exec": [
 							"const responseJSON = pm.response.json();\r",
-							"const data = responseJSON.data;\r",
+							"const responseData = responseJSON.data;\r",
 							"\r",
 							"pm.test('Route Loaded', ()=>{\r",
 							"    pm.expect(pm.response.code).to.equals(200);\r",
@@ -85,15 +85,15 @@
 							"\r",
 							"pm.test('Route returns with Prediction Result', ()=>{\r",
 							"    \r",
-							"    pm.expect(data).to.ownProperty('result');\r",
-							"    pm.expect(data.result).to.be.an('string');\r",
+							"    pm.expect(responseData).to.ownProperty('result');\r",
+							"    pm.expect(responseData.result).to.be.an('string');\r",
 							"})\r",
 							"\r",
 							"pm.test('Route Returns with Recomendation Object', ()=>{\r",
-							"    pm.expect(data).to.ownProperty('recomendations');\r",
+							"    pm.expect(responseData).to.ownProperty('recomendations');\r",
 							"\r",
 							"    if(responseJSON.recomendations){\r",
-							"        const recomendations = data.recomendations;\r",
+							"        const recomendations = responseData.recomendations;\r",
 							"        pm.expect(recomendations).to.be.an('array');\r",
 							"    }\r",
 							"})"
@@ -112,18 +112,17 @@
 						{
 							"key": "image",
 							"type": "file",
-							"src": "/C:/Users/chris/Downloads/scissors.png"
+							"src": "/D:/For Bangkit/Bangkit Folder/Capstone/Hairapy/ML Testing Data/v2/dandr.jpg"
 						}
 					]
 				},
 				"url": {
-					"raw": "http://localhost:3000/predict",
-					"protocol": "http",
+					"raw": "{{baseURL}}/api/predict",
 					"host": [
-						"localhost"
+						"{{baseURL}}"
 					],
-					"port": "3000",
 					"path": [
+						"api",
 						"predict"
 					]
 				}
@@ -131,17 +130,294 @@
 			"response": []
 		},
 		{
-			"name": "Post Image",
+			"name": "Get All Predictions",
 			"request": {
-				"method": "POST",
+				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{baseURL}}/upload",
+					"raw": "{{baseURL}}/api/predicts",
 					"host": [
 						"{{baseURL}}"
 					],
 					"path": [
-						"upload"
+						"api",
+						"predicts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Prediction By ID",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/api/predicts",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"api",
+						"predicts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Article",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.environment.set('articleID', pm.response.json().data.articleID);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "title",
+							"value": "Article Title 1",
+							"type": "text"
+						},
+						{
+							"key": "content",
+							"value": "Article Content 1",
+							"type": "text"
+						},
+						{
+							"key": "image",
+							"type": "file",
+							"src": []
+						}
+					]
+				},
+				"url": {
+					"raw": "{{baseURL}}/api/articles",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"api",
+						"articles"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Articles",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/api/articles",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"api",
+						"articles"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Article By ID",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/api/articles/{{articleID}}",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"api",
+						"articles",
+						"{{articleID}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Edit Article",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "title",
+							"value": "Article Title (Edited)",
+							"type": "text"
+						},
+						{
+							"key": "content",
+							"value": "Article Content (Edited)",
+							"type": "text"
+						},
+						{
+							"key": "image",
+							"type": "file",
+							"src": []
+						}
+					]
+				},
+				"url": {
+					"raw": "{{baseURL}}/api/articles/{{articleID}}",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"api",
+						"articles",
+						"{{articleID}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Article",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": ""
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add User",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.environment.set('userID', pm.response.json().data.userID);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"Bob\",\r\n    \"password\": \"111\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/api/users",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"api",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Users",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/api/users",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"api",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get User By ID",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/api/users",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"api",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete User",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/api/users",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"api",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Edit Users",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"Bob\",\r\n    \"password\": \"111\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/api/users/{{userID}}",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"api",
+						"users",
+						"{{userID}}"
 					]
 				}
 			},
