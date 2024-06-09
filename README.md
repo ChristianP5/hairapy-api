@@ -21,7 +21,7 @@ https://docs.google.com/document/d/10O2n4bk5sRJGbkiFG1MPDrCsf3I8pMasAWrqhR0vj4c/
 - ✔️ Returns Inference result as JSON
 
 ## TODO:
-- 🔴 Articles Endpoints
+- ✔️ Articles Endpoints
 - 🔴 Additional Backend Functionality
 - 🔴 Custom Domain Name
 - 🔴 Authentication
