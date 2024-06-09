@@ -1,7 +1,11 @@
 const {
     getRootHandler, customNotFound, postPredictHandler,
     postArticleHandler, getArticlesHandler, getArticleByIdHandler,
-    deleteArticleHandler, editArticleHandler
+    deleteArticleHandler, editArticleHandler,
+    getPredictsHandler, getPredictsByIdHandler,
+    postUsersHandler, getUsersHandler,
+    getUserByIdHandler, editUserHandler,
+    deleteUserHandler
 } = require('./handler');
 
 const routes = [
@@ -10,6 +14,8 @@ const routes = [
         path: '/',
         handler: getRootHandler,
     },
+
+    // Predictions
     {
         path: '/api/predict',
         method: 'POST',
@@ -23,8 +29,18 @@ const routes = [
             }
         }
     },
-    // Articles ---------------------------------------------
+    {
+        path: '/api/predicts',
+        method: 'GET',
+        handler: getPredictsHandler,
+    },
+    {
+        path: '/api/predicts/{id}',
+        method: 'GET',
+        handler: getPredictsByIdHandler,
+    },
 
+    // Articles ---------------------------------------------
     {
         path: '/api/articles',
         method: 'POST',
@@ -67,6 +83,32 @@ const routes = [
         }
     },
 
+    // Users -----------------------------------
+    {
+        path: '/api/users',
+        method: 'POST',
+        handler: postUsersHandler,
+    },
+    {
+        path: '/api/users',
+        method: 'GET',
+        handler: getUsersHandler,
+    },
+    {
+        path: '/api/users/{id}',
+        method: 'GET',
+        handler: getUserByIdHandler,
+    },
+    {
+        path: '/api/users/{id}',
+        method: 'PUT',
+        handler: editUserHandler,
+    },
+    {
+        path: '/api/users/{id}',
+        method: 'DELETE',
+        handler: deleteUserHandler,
+    },
 
     {
         method: '*',
