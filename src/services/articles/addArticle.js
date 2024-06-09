@@ -50,6 +50,7 @@ const addArticle = async (id, image, title, content) => {
     const articleDoc = articlesCollection.doc(id);
 
     const data = {
+        id: id,
         title: title,
         content: content,
         createdAt: createdAt,
