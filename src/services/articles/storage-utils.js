@@ -7,7 +7,7 @@ const { Storage } = require("@google-cloud/storage");
     })
 
 const createBucket = async () => {
-    const bucket = storage.bucket(process.env.BUCKET_NAME);
+    const bucket = storage.bucket(process.env.ARTICLES_BUCKET_NAME);
 
     try{
         // Check if Bucket Exists
@@ -18,7 +18,7 @@ const createBucket = async () => {
             location: 'ASIA-SOUTHEAST2',
         }
 
-        await storage.createBucket(process.env.BUCKET_NAME, createBucketOptions);
+        await storage.createBucket(process.env.ARTICLES_BUCKET_NAME, createBucketOptions);
     }
 }
 
@@ -26,13 +26,13 @@ const createBucket = async () => {
 // Function to upload an image to Google Cloud Storage
 async function uploadImage(filePath, destinationPath) {
     try {
-            const bucket = storage.bucket(process.env.BUCKET_NAME);
+            const bucket = storage.bucket(process.env.ARTICLES_BUCKET_NAME);
 
         // Set custom metadata for the uploaded image
         const customMetadata = {
             contentType: 'image/jpeg', 
             metadata: {
-                type: "api-upload" 
+                type: "articles-image" 
             }
         };
 
@@ -42,13 +42,27 @@ async function uploadImage(filePath, destinationPath) {
             };
 
         // Upload the image to the bucket
-        const response = await bucket.upload(filePath, optionsUploadObject);
-        // console.log(`${filePath} uploaded to ${process.env.BUCKET_NAME} bucket`);
-        return response;
+        await bucket.upload(filePath, optionsUploadObject);
+        // console.log(`${filePath} uploaded to ${process.env.ARTICLES_BUCKET_NAME} bucket`);
+        return true;
     } catch (error) {
         // console.error(`Failed to upload ${filePath}:`, error);
         throw error;
     }
 }
 
-module.exports = { uploadImage, createBucket };
+async function removeImage(filePath) {
+    try {
+            const bucket = storage.bucket(process.env.ARTICLES_BUCKET_NAME);
+
+        // Upload the image to the bucket
+        await bucket.file(filePath).delete();
+        console.log(`${filePath} deleted from ${process.env.ARTICLES_BUCKET_NAME} bucket`);
+        return true;
+    } catch (error) {
+        console.error(`Failed to upload ${filePath}:`, error);
+        throw error;
+    }
+}
+
+module.exports = { uploadImage, removeImage, createBucket };
