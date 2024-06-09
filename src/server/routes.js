@@ -1,6 +1,17 @@
 const {
-    getRootHandler, customNotFound, postPredictHandler, postUploadHandler
+    getRootHandler, 
+    customNotFound, 
+    postPredictHandler, 
+    postUploadHandler,
+    getAllPredictionsHandler,
+    // getSavedPredictionByIdHandler,
+    // createUserHandler,
+    // getAllUsersHandler,
+    // getUserByIdHandler,
+    // updateUserHandler,
+    // deleteUserHandler
 } = require('./handler');
+
 
 const routes = [
     {
@@ -30,6 +41,36 @@ const routes = [
                 multipart: true,
             }
         }
+    },
+    {
+        method: 'GET',
+        path: '/predictions',
+        handler: getAllPredictionsHandler,
+    },
+    {
+        method: 'POST',
+        path: '/users',
+        handler: addUserHandler,
+    },
+    {
+        method: 'GET',
+        path: '/users',
+        handler: getAllUsersHandler,
+    },
+    {
+        method: 'GET',
+        path: '/users/{id}',
+        handler: getUserByIdHandler,
+    },
+    {
+        method: 'PUT',
+        path: '/users/{id}',
+        handler: editUserHandler,
+    },
+    {
+        method: 'DELETE',
+        path: '/users/{id}',
+        handler: deleteUserHandler,
     },
     {
         method: '*',

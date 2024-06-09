@@ -4,6 +4,15 @@ const InputError = require('../exceptions/InputError');
 const crypto = require('crypto');
 const { uploadImage, createBucket } = require('../services/upload');
 
+const getPredictions = require('../services/getPredictions');
+
+const addUserHandler = require('../services/addUser');
+const getUserHandler = require('../services/getUser');
+const editUserHandler = require('../services/editUser');
+const deleteUserHandler = require('../services/deleteUser');
+const getUserByIdHandler = require('../services/getUserById');
+
+
 const getRootHandler = (request, h)=>{
     return h.response({
         status: 'success',
@@ -89,10 +98,76 @@ const postPredictHandler = async (request, h)=>{
 
         }
     })
-
     response.code(200);
     return response;
 }
 
+const getAllPredictionsHandler = async (_request, h) => {
+    try {
+        const predictions = await getPredictions();
+        return h.response({
+            status: 'success',
+            data: predictions,
+        });
+    } catch (error) {
+        console.error('Error:', error);
+        return h.response({
+            status: 'fail',
+            message: 'Error fetching predictions',
+        }).code(500);
+    }
+};
+
+// User handlers
+// Handler to get all users
+const getUsersHandler = async (request, h) => {
+    const users = await getUsers();
+    return h.response({
+        status: 'success',
+        message: 'Users retrieved successfully',
+        data: { users }
+    }).code(200);
+};
+
+// Handler to get a user by ID
+const getUserByIdHandler = async (request, h) => {
+    const { id } = request.params;
+    const user = await getUserById(id);
+    return h.response({
+        status: 'success',
+        message: 'User retrieved successfully',
+        data: { user }
+    }).code(200);
+};
+
+// Handler to edit user info
+const editUserHandler = async (request, h) => {
+    const { id } = request.params;
+    const { username, password } = request.payload;
+    await editUser(id, username, password);
+    return h.response({
+        status: 'success',
+        message: 'User updated successfully'
+    }).code(200);
+};
+
+// Handler to delete a user
+const deleteUserHandler = async (request, h) => {
+    const { id } = request.params;
+    await deleteUser(id);
+    return h.response({
+        status: 'success',
+        message: 'User deleted successfully'
+    }).code(200);
+};
+
 module.exports = {
-    getRootHandler, customNotFound, postPredictHandler, postUploadHandler};
+    getRootHandler, 
+    customNotFound, 
+    postPredictHandler, 
+    postUploadHandler, 
+    getAllPredictionsHandler,
+    getUsersHandler,
+    editUserHandler,
+    deleteUserHandler,
+    getUserByIdHandler};

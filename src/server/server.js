@@ -3,6 +3,8 @@ const routes = require('./routes');
 const { loadModel } = require('../services/inferenceOps');
 const dotenv = require('dotenv');
 
+
+
 dotenv.config();
 
 const init = async () => {
@@ -56,8 +58,9 @@ const init = async () => {
   console.log(`Server berjalan pada ${server.info.uri}`);
 };
 
-process.on('unhandledRejection', ()=>{
+process.on('unhandledRejection', (error)=>{
   console.error(`Process caught Error!`);
+  console.error(error.stack);
   process.exit(1);
 })
 

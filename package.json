@@ -8,7 +8,7 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "",
+  "description": "Please Add the API Documentation Here!",
   "dependencies": {
     "@google-cloud/firestore": "^7.8.0",
     "@google-cloud/storage": "^7.11.1",
