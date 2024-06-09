@@ -290,7 +290,7 @@ const postUsersHandler = async (request, h) => {
 
     const response = h.response({
         status: 'success',
-        messagE: `${username} added successfully!`,
+        message: `${username} added successfully!`,
         data: {
             userID: id,
         }
