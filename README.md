@@ -9,19 +9,11 @@ Please Add the API Documentation Here!
   **before running 'npm install'**
 
 ## API Documentation:
-https://docs.google.com/document/d/10O2n4bk5sRJGbkiFG1MPDrCsf3I8pMasAWrqhR0vj4c/edit?usp=sharing
-
-**/predict**
-
-- ✔️ Send an Image as an Input to the Multi-Class Machine Learning Model
-- 🔴 Authentication
-- 🔴 Error Handling
-- ✔️ set maxBytes to 100MB
-- ✔️ Records Prediction Results in Firestore
-- ✔️ Returns Inference result as JSON
+Without JWT Authentication : https://docs.google.com/document/d/10O2n4bk5sRJGbkiFG1MPDrCsf3I8pMasAWrqhR0vj4c/edit?usp=sharing
+With JWT Authentication : https://docs.google.com/document/d/163Y-SeWapQ3AViEmDSYC_v4_M8sGrp-mPnQqUuwdJHA/edit?usp=sharing
 
 ## TODO:
 - ✔️ Articles Endpoints
 - 🔴 Additional Backend Functionality
 - ✔️ Custom Domain Name
-- 🔴 Authentication
+- ✔️ Authentication
