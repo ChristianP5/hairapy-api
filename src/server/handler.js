@@ -1,6 +1,5 @@
 const crypto = require('crypto');
 const fs = require('fs');
-const path = require('path');
 
 // Preictions
 const { modelPredict } = require('../services/inferenceOps');
@@ -24,7 +23,16 @@ const getUserById = require('../services/users/getUserById');
 const editUser = require('../services/users/editUser');
 const deleteUser = require('../services/users/deleteUser');
 
+// Auth
+const login = require('../services/auth/login.js');
+const renewToken = require('../services/auth/renewToken');
+const logout = require('../services/auth/logout.js');
+const isAdmin = require('../services/auth/isAdmin.js');
+const register = require('../services/auth/register');
+const isLoggedIn = require('../services/auth/isLoggedIn.js');
+
 const getRootHandler = (request, h)=>{
+
     return h.response({
         status: 'success',
         message: 'Welcome to Root!'
@@ -120,6 +128,8 @@ const postPredictHandler = async (request, h)=>{
 
 const postArticleHandler = async (request, h) => {
     
+    isAdmin(request);
+
     let image, title, content;
     try {
         const { title: reqTitle, content: reqContent, image: reqImage } = request.payload || {};
@@ -190,6 +200,8 @@ const getArticleByIdHandler = async (request, h) => {
 
 const deleteArticleHandler = async (request, h) => {
 
+    isAdmin(request);
+
     const { id } = request.params;
 
     await deleteArticle(id);
@@ -205,6 +217,8 @@ const deleteArticleHandler = async (request, h) => {
 }
 
 const editArticleHandler = async (request, h) => {
+
+    isAdmin(request);
 
     const { id } = request.params;
     
@@ -236,6 +250,8 @@ const editArticleHandler = async (request, h) => {
 
 const getPredictsHandler = async (request, h) => {
 
+    isAdmin(request);
+
     const preds = await getPredictions();
     const response = h.response({
         status: 'success',
@@ -251,6 +267,8 @@ const getPredictsHandler = async (request, h) => {
 }
 
 const getPredictsByIdHandler = async (request, h) => {
+
+    isAdmin(request);
 
     const { id } = request.params;
 
@@ -269,6 +287,8 @@ const getPredictsByIdHandler = async (request, h) => {
 }
 
 const postUsersHandler = async (request, h) => {
+
+    isAdmin(request);
 
     let username, password;
     try{
@@ -301,6 +321,8 @@ const postUsersHandler = async (request, h) => {
 }
 
 const getUsersHandler = async (request, h) => {
+
+    isAdmin(request);
 
     const users = await getUsers();
     
@@ -368,6 +390,8 @@ const editUserHandler = async (request, h) => {
 
 const deleteUserHandler = async (request, h) => {
 
+    isAdmin(request);
+
     const { id } = request.params;
     await deleteUser(id);
 
@@ -380,6 +404,136 @@ const deleteUserHandler = async (request, h) => {
     return response;
 }
 
+const postLoginHandler = async (request, h) => {
+
+    isLoggedIn(request);
+    
+    let username, password;
+    try{
+        const { username: reqUsername, password: reqPassword } = request.payload;
+
+        if(!reqUsername || !reqPassword){
+            throw new InputError('Please Input Username and Password Value!')
+        }
+
+        username = reqUsername;
+        password = reqPassword;
+
+    }catch(error){
+        throw new InputError(error.message);
+    }
+
+    const {accessToken, refreshToken} = await login(username, password);
+
+    const response = h.response({
+        status: 'success',
+        message: 'Logged In Successfully!',
+        data: {
+            accessToken: accessToken,
+            refreshToken: refreshToken,
+        }
+    })
+
+    response.code(200);
+
+    return response;
+}
+
+const postTokenHandler = async (request, h) => {
+    
+    let refreshToken;
+        const { refreshToken: reqRT } = request.payload;
+
+        if(!reqRT){
+            throw new InputError('Please Include Refresh Token!')
+        }
+
+        refreshToken = reqRT;
+
+    try{
+
+    }catch(error){
+        throw new InputError(error.message);
+    }
+
+    const newToken = await renewToken(refreshToken);
+
+    const response = h.response({
+        status: 'success',
+        message: 'Access Code Refreshed Successfully!',
+        data: {
+            accessToken: newToken,
+        }
+    })
+
+    response.code(200);
+
+    return response;
+}
+
+const postLogoutHandler = async (request, h) => {
+    
+    let refreshToken;
+    try{
+        const { refreshToken: reqRT } = request.payload;
+        if(!reqRT){
+            throw new InputError('Please Include Refresh Token!')
+        }
+
+        refreshToken = reqRT;
+    }catch(error){
+        throw new InputError(error.message);
+    }
+    
+    await logout(refreshToken);
+
+    const response = h.response({
+        status: 'success',
+        message: 'Refresh Token removed successfully!',
+    })
+
+    response.code(200);
+
+    return response;
+}
+
+const postRegisterHandler = async (request, h) => {
+
+    isLoggedIn(request);
+
+    let username, password;
+    try{
+        const { username: reqUsername, password: reqPassword } = request.payload;
+        if(!reqUsername || !reqPassword){
+            throw new InputError('Please Include Refresh Token!')
+        }
+
+        username = reqUsername;
+        password = reqPassword;
+
+    }catch(error){
+        throw new InputError(error.message);
+    }
+
+    const id = crypto.randomBytes(8).toString('hex');
+
+    const { accessToken, refreshToken } = await register(id, username, password);
+
+    const response = h.response({
+        status: 'success',
+        message: `${username} registered Successfully!`,
+        data: {
+            accessToken: accessToken,
+            refreshToken: refreshToken,
+            userID: id,
+        }
+    })
+
+    response.code(200);
+
+    return response;
+}
+
 module.exports = {
     getRootHandler, customNotFound, postPredictHandler,
     postArticleHandler, getArticlesHandler, getArticleByIdHandler,
@@ -387,5 +541,7 @@ module.exports = {
     getPredictsHandler, getPredictsByIdHandler,
     postUsersHandler, getUsersHandler,
     getUserByIdHandler, editUserHandler,
-    deleteUserHandler
+    deleteUserHandler, postLoginHandler,
+    postTokenHandler,postLogoutHandler,
+    postRegisterHandler
 };

@@ -14,6 +14,7 @@
     "@google-cloud/storage": "^7.11.1",
     "@hapi/hapi": "^21.3.9",
     "@hapi/inert": "^7.1.0",
+    "@hapi/jwt": "^3.2.0",
     "@tensorflow/tfjs-node": "^4.20.0",
     "bcrypt": "^5.1.1",
     "crypto": "^1.0.1",

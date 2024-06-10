@@ -5,7 +5,9 @@ const {
     getPredictsHandler, getPredictsByIdHandler,
     postUsersHandler, getUsersHandler,
     getUserByIdHandler, editUserHandler,
-    deleteUserHandler
+    deleteUserHandler, postLoginHandler,
+    postTokenHandler, postLogoutHandler,
+    postRegisterHandler
 } = require('./handler');
 
 const routes = [
@@ -15,7 +17,44 @@ const routes = [
         handler: getRootHandler,
     },
 
-    // Predictions
+    // Auth
+    {
+        path: '/api/login',
+        method: 'POST',
+        handler: postLoginHandler,
+        options: {
+            auth: {
+                mode: 'try',
+            }
+        }
+    },
+    {
+        path: '/api/token',
+        method: 'POST',
+        handler: postTokenHandler,
+        options: {
+            auth: {
+                mode: 'try',
+            }
+        }
+    },
+    {
+        path: '/api/logout',
+        method: 'DELETE',
+        handler: postLogoutHandler,
+    },
+    {
+        path: '/api/register',
+        method: 'POST',
+        handler: postRegisterHandler,
+        options: {
+            auth: {
+                mode: 'try',
+            }
+        }
+    },
+
+    // Predictions --------------------------------------
     {
         path: '/api/predict',
         method: 'POST',

@@ -1,14 +1,17 @@
+
+
 const Hapi = require('@hapi/hapi');
 const routes = require('./routes');
 const { loadModel } = require('../services/inferenceOps');
 const dotenv = require('dotenv');
 const InputError = require('../exceptions/InputError');
 
+
 dotenv.config();
 
 const init = async () => {
   const server = Hapi.server({
-    port: 3000,
+    port: 9000,
     host: 'localhost',
     routes: {
       cors: {
@@ -17,7 +20,7 @@ const init = async () => {
     },
   });
 
-  server.route(routes);
+
 
   /* Load the Model and Save the Model in server.app (Uncomment once Model is Available) */
   /*
@@ -26,15 +29,37 @@ const init = async () => {
       request.server.app
   */
  
-      const model = await loadModel();
-      server.app.model = model;
+      // const model = await loadModel();
+      // server.app.model = model;
   
 
   await server.register([
     {
       plugin: require('@hapi/inert')
+    },
+    {
+      plugin: require('@hapi/jwt'),
     }
   ])
+
+  server.auth.strategy('jwt_strategy', 'jwt', {
+    keys: process.env.ACCESS_TOKEN_SECRET,
+    verify: {
+            aud: false,
+            iss: false,
+            sub: false,
+            nbf: true,
+            maxAgeSec: 0,
+            timeSkewSec: 0,
+    },
+    validate: async (artifacts, request, h) => {
+      return { isValid: true };
+    }
+  })
+
+  server.auth.default('jwt_strategy');
+
+
   server.ext('onPreResponse', (request, h)=>{
     const response = request.response;
 
@@ -60,6 +85,8 @@ const init = async () => {
 
     return h.continue;
   })
+
+  server.route(routes);
 
   await server.start();
   console.log(`Server berjalan pada ${server.info.uri}`);
