@@ -29,8 +29,8 @@ const init = async () => {
       request.server.app
   */
  
-      // const model = await loadModel();
-      // server.app.model = model;
+      const model = await loadModel();
+      server.app.model = model;
   
 
   await server.register([

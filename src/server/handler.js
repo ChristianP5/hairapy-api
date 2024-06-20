@@ -59,29 +59,9 @@ const postPredictHandler = async (request, h)=>{
 
     /* Use the Loaded Model */
     const { model } = request.server.app;
-    let { result, confidenceScore, ingredients, recomendations } = await modelPredict(model, imageRaw);
+    let { result, confidenceScore, ingredients, recommendations } = await modelPredict(model, imageRaw);
 
     const createdAt = new Date().toISOString();
-    console.log(createdAt);
-
-    // Default Values
-    // result = 'classification-value';
-    // confidenceScore = 100;
-    ingredients = [
-        "ingredient-1",
-        "ingredient-2",
-        "ingredient-3"
-    ];
-    recomendations = [
-        {
-            image: 'rec1-image-url',
-            name: 'rec1-name'
-        },
-        {
-            image: 'rec2-image-url',
-            name: 'rec2-name'
-        },
-    ]
 
     /* Save Image to Google Cloud Storage Bucket */
 
@@ -99,7 +79,7 @@ const postPredictHandler = async (request, h)=>{
         result: result,
         confidenceScore: confidenceScore,
         ingredients: ingredients,
-        recomendations: recomendations,
+        recomendations: recommendations,
         image: `${process.env.SAVED_PREDICTION_IMG_URL}${newImageName}`,
         createdAt: createdAt,
         id: predictId,
@@ -115,7 +95,7 @@ const postPredictHandler = async (request, h)=>{
             result: result,
             confidenceScore: confidenceScore,
             ingredients: ingredients,
-            recomendations: recomendations,
+            recomendations: recommendations,
             createdAt: createdAt,
         }
     })
