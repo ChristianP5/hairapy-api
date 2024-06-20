@@ -1,24 +1,24 @@
 const { Firestore } = require('@google-cloud/firestore');
 
-const InputError = require('../../exceptions/InputError')
+const InputError = require('../../exceptions/InputError');
+
 const getArticleById = async (id) => {
-    const fs = new Firestore({
-        projectId: process.env.PROJECT_ID,
-        databaseId: process.env.FIRESTORE_ID,
-    })
+  const fs = new Firestore({
+    projectId: process.env.PROJECT_ID,
+    databaseId: process.env.FIRESTORE_ID,
+  });
 
-    const articlesCollection = fs.collection('articles');
-    const articleDoc = articlesCollection.doc(id);
-    
-    const result = await articleDoc.get();
-    const article = result.data();
+  const articlesCollection = fs.collection('articles');
+  const articleDoc = articlesCollection.doc(id);
 
-    if(!article){
-        throw new InputError(`Article with id=${id} not found!`);
-    }
+  const result = await articleDoc.get();
+  const article = result.data();
 
-    return article;
-    
-}
+  if (!article) {
+    throw new InputError(`Article with id=${id} not found!`);
+  }
+
+  return article;
+};
 
 module.exports = getArticleById;

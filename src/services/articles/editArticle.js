@@ -4,12 +4,12 @@ const crypto = require('crypto');
 const InputError = require('../../exceptions/InputError');
 
 const { createBucket, uploadImage, removeImage } = require('./storage-utils');
+
 const editArticle = async (id, title, content, image) => {
+  // Extrace Values from Parameters
+  const { filename: input_imagename, path: input_imagepath } = image;
 
-    // Extrace Values from Parameters
-    const {filename: input_imagename, path: input_imagepath} = image;
-
-    /*
+  /*
      1) Check Article Exists
      2) Check if New Image Exists
         - IF Exist, remove Old Image and add New Image
@@ -17,54 +17,51 @@ const editArticle = async (id, title, content, image) => {
      3) Update Firestore
     */
 
-     // 1)
-     const fs = new Firestore({
-        projectId: process.env.PROJECT_ID,
-        databaseId: process.env.FIRESTORE_ID,
-     })
+  // 1)
+  const fs = new Firestore({
+    projectId: process.env.PROJECT_ID,
+    databaseId: process.env.FIRESTORE_ID,
+  });
 
-        const articlesCollection = fs.collection('articles');
-        const articleDoc = articlesCollection.doc(id);
-        
-        const result = await articleDoc.get();
-        const article = result.data();
+  const articlesCollection = fs.collection('articles');
+  const articleDoc = articlesCollection.doc(id);
 
-        if(!article){
-            throw new InputError(`Article with id=${id} not found!`);
-        }
+  const result = await articleDoc.get();
+  const article = result.data();
 
-    // 2)
-    
-    let article_image_url = article.image_url;
-    if(input_imagename){
-        
-        // Delete Old Image
-        const article_image_path = article_image_url.replace(process.env.SAVED_ARTICLES_IMG_URL, "");
-        await removeImage(article_image_path);
+  if (!article) {
+    throw new InputError(`Article with id=${id} not found!`);
+  }
 
-        // Create New Image
-        const fileExt = input_imagename.split('.')[1];
-        const newImageName = `articles-${crypto.randomBytes(6).toString('hex')}.${fileExt}`;
-        const image_dest_path = `${newImageName}`;
+  // 2)
 
-        await createBucket();
-        await uploadImage(input_imagepath, image_dest_path);
+  let article_image_url = article.image_url;
+  if (input_imagename) {
+    // Delete Old Image
+    const article_image_path = article_image_url.replace(process.env.SAVED_ARTICLES_IMG_URL, '');
+    await removeImage(article_image_path);
 
-        article_image_url = `${process.env.SAVED_ARTICLES_IMG_URL}${newImageName}`;
-    }
+    // Create New Image
+    const fileExt = input_imagename.split('.')[1];
+    const newImageName = `articles-${crypto.randomBytes(6).toString('hex')}.${fileExt}`;
+    const image_dest_path = `${newImageName}`;
 
-    
+    await createBucket();
+    await uploadImage(input_imagepath, image_dest_path);
 
-    const data = {
-        title: title,
-        content: content,
-        createdAt: article.createdAt,
-        image_url: article_image_url,
-    }
+    article_image_url = `${process.env.SAVED_ARTICLES_IMG_URL}${newImageName}`;
+  }
 
-    await articleDoc.update(data);
+  const data = {
+    title,
+    content,
+    createdAt: article.createdAt,
+    image_url: article_image_url,
+  };
 
-    return true;
-}
+  await articleDoc.update(data);
+
+  return true;
+};
 
 module.exports = editArticle;
